@@ -1,25 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import AddTodo from "./Components/AddTodo";
+import ListTask from "./Components/ListTask";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends Component {
+  state = {
+    todos: [],
+    newTodo: "",
+  };
+
+  //remove a todo
+  handleRemove = (id) => {
+    this.setState({ todos: this.state.todos.filter((el) => el.id !== id) });
+  };
+
+  //mark a todo
+  handleDone = (id) => {
+    this.setState({
+      todos: this.state.todos.map((el) =>
+        el.id === id ? { ...el, isDone: !el.isDone } : el
+      ),
+    });
+  };
+
+  //change a todo
+  handleChange = (e) => {
+    this.setState({newTodo : e.target.value});
+  };
+
+  //add todo
+  add = (newAction) => {
+    this.setState({todos: [...this.state.todos, newAction]});
+    this.setState({newTodo : ""})
+  }
+  render() {
+    return (
+      <div className="App">
+        <AddTodo newAction={this.state.newTodo} change={ this.handleChange } add={this.add}/>
+        <ListTask
+          list={this.state.todos}
+          delete={this.handleRemove}
+          done={this.handleDone}
+        />
+      </div>
+    );
+  }
 }
-
-export default App;
